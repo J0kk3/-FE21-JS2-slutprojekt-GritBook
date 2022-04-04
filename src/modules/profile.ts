@@ -10,7 +10,7 @@ import { onValue, ref, get } from "firebase/database";
 
 // const edizRef = ref(db, '/users/userInfo/edzone')
 // get(edizRef).then(snapshot => {
-    
+
 //     console.log(snapshot.val());
 // })
 //Hämtar användernamn och kön ifrån Main.ts och sätter ut på profil-sidan
@@ -20,14 +20,14 @@ let bioID = sessionStorage.getItem("bio");
 
 console.log(usernameID, genderID, bioID)
 
-const namn:HTMLElement = document.querySelector('#UsernameID')
+const namn: HTMLElement = document.querySelector('#UsernameID')
 const gender: HTMLElement = document.querySelector('#genderID');
 const bio: HTMLElement = document.querySelector('#bioID');
 bio.innerText = bioID;
 gender.innerText = genderID;
 namn.innerText = usernameID;
 
-document.getElementById("logout-button").addEventListener("click", ()=>
+document.getElementById("logout-button").addEventListener("click", () =>
 {
    sessionStorage.clear();
 });
