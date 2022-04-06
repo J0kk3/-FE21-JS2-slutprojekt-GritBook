@@ -1,33 +1,37 @@
+import { ref, get, DataSnapshot } from "firebase/database";
 import { db } from "./firebaseApp";
-import { onValue, ref, get } from "firebase/database";
+import { logOut } from "./logout";
+import { deleteProfile } from "./deleteUser";
 
-/* const dbReff = ref(db, '/users/userInfo');
- onValue(dbReff, snapshot=>{
-    const data = snapshot.val();
-    console.log(data)
+(() =>
+ {
+  let usernameID = sessionStorage.getItem("user");
+  let target = sessionStorage.getItem("targetUser");
+  let test = target === null ? usernameID : target;
 
- }) */
+  console.log(test);
 
-// const edizRef = ref(db, '/users/userInfo/edzone')
-// get(edizRef).then(snapshot => {
+  const dbRef = ref(db, `/users/userInfo/${test.toLowerCase()}`);
+  get(dbRef).then((snapshot: DataSnapshot) =>
+    {
+    if (snapshot.exists())
+    {
+      const { username, bio, gender, profilePic } = snapshot.val();
+      console.log(snapshot.val());
+      const img: HTMLInputElement = document.querySelector("#ProfileP");
+      img.src = profilePic;
 
-//     console.log(snapshot.val());
-// })
-//Hämtar användernamn och kön ifrån Main.ts och sätter ut på profil-sidan
-let usernameID = sessionStorage.getItem("user");
-let genderID = sessionStorage.getItem("gender");
-let bioID = sessionStorage.getItem("bio");
+      const namn: HTMLElement = document.querySelector("#UsernameID");
+      const genders: HTMLElement = document.querySelector("#genderID");
+      const bios: HTMLElement = document.querySelector("#bioID");
 
-console.log(usernameID, genderID, bioID)
+      bios.innerText = bio;
+      genders.innerText = gender;
+      namn.innerText = username;
+      sessionStorage.removeItem("targetUser");
+    }
+  });
+})();
 
-const namn: HTMLElement = document.querySelector('#UsernameID')
-const gender: HTMLElement = document.querySelector('#genderID');
-const bio: HTMLElement = document.querySelector('#bioID');
-bio.innerText = bioID;
-gender.innerText = genderID;
-namn.innerText = usernameID;
-
-document.getElementById("logout-button").addEventListener("click", () =>
-{
-   sessionStorage.clear();
-});
+deleteProfile();
+logOut();
