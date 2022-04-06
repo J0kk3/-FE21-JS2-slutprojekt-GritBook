@@ -98,7 +98,7 @@ export class UserSign
                 sessionStorage.setItem("gender", `${addUser.gender}`);
                 sessionStorage.setItem("bio", `${addUser.bio}`);
                 sessionStorage.setItem("pic", `${addUser.profilePic}`);
-                window.location.href = "html/profile.html";
+                window.location.href = "./html/profile.html";
               }
             }
           });
@@ -131,7 +131,7 @@ export class UserSign
               display.wrongUserOrPassword();
             } else if (this.password.value == snapshot.val().password)
             {
-              window.location.href = "html/home.html";
+              window.location.href = "./html/home.html";
             }
             sessionStorage.setItem("user", `${snapshot.val().username}`);
             sessionStorage.setItem("gender", `${snapshot.val().gender}`);
