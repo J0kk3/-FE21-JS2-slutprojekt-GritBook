@@ -18,42 +18,45 @@ const app = initializeApp(firebaseConfig);
 export const db = getDatabase(app);
 const dbRef = ref(db, "/users/userInfo/");
 const display = new DisplayToDom();
-export class UserSign
-{
+export class UserSign {
   public username: HTMLInputElement;
   public password: HTMLInputElement;
   public gender: HTMLInputElement;
   public bio: HTMLInputElement;
-  constructor(username?: HTMLInputElement, password?: HTMLInputElement)
-  {
+  public pic: HTMLInputElement;
+  constructor(username?: HTMLInputElement, password?: HTMLInputElement) {
     this.username = username;
     this.password = password;
   }
   /* Checks if user exists in database, if not it creates new user and uses session storage and redirects user to her/his profile */
-  public createUser(): void
-  {
+  public createUser(): void {
     document
       .getElementById("register-user-to-site")
-      .addEventListener("click", (e) =>
-      {
+      .addEventListener("click", (e) => {
         e.preventDefault;
 
         this.username = document.querySelector("#username");
         this.password = document.querySelector("#password");
         const bio: HTMLInputElement = document.querySelector("#bio");
+        const radio: NodeListOf<HTMLInputElement> =
+          document.querySelectorAll(".form-radio");
+        let img: string;
+        radio.forEach((key: HTMLInputElement): void => {
+          if (key.checked) {
+            img = key.value;
+          }
+        });
 
         const newUsername: string = this.username.value.toLowerCase();
-
+        let profilePic: string = img;
+        /* Checks if any input is empty, if so it gives error message. Else it creates new user */
         if (
           newUsername === "" ||
           this.password.value === "" ||
           bio.value === ""
-        )
-        {
+        ) {
           display.fillInEveryBlock();
-        } else
-        {
-          console.log("GENDER: ", document.querySelector("#gender"));
+        } else {
           const addUser = {
             username: (document.querySelector("#username") as HTMLInputElement)
               .value,
@@ -62,29 +65,27 @@ export class UserSign
             gender: (document.querySelector("#gender") as HTMLInputElement)
               .value,
             bio: (document.querySelector("#bio") as HTMLInputElement).value,
+            profilePic: img,
           };
-
-          get(child(dbRef, `/${newUsername}`)).then((snapshot) =>
-          {
-            console.log(snapshot.val(), snapshot.exists());
-            if (snapshot.exists())
-            {
+          /* checks with database if user exists or not */
+          get(child(dbRef, `/${newUsername}`)).then((snapshot) => {
+            if (snapshot.exists()) {
               display.alreadyUser();
-            } else
-            {
+            } else {
               if (
                 newUsername != "" &&
                 this.password.value != "" &&
-                bio.value != ""
-              )
-              {
+                bio.value != "" &&
+                profilePic
+              ) {
                 const newKey: string = newUsername;
                 const newUser = {};
-                newUser[ newKey ] = addUser;
+                newUser[newKey] = addUser;
                 update(dbRef, newUser);
                 sessionStorage.setItem("user", `${addUser.username}`);
                 sessionStorage.setItem("gender", `${addUser.gender}`);
                 sessionStorage.setItem("bio", `${addUser.bio}`);
+                sessionStorage.setItem("pic", `${addUser.profilePic}`);
                 window.location.href = "html/profile.html";
               }
             }
@@ -93,39 +94,31 @@ export class UserSign
       });
   }
   /* Checks with database if user exits or not, if not it'll prompt error messages. If user exists and the password is true, it'll use session storage and redirect the user to the home page */
-  public logIn(): void
-  {
-    document.getElementById("login").addEventListener("click", (e) =>
-    {
+  public logIn(): void {
+    document.getElementById("login").addEventListener("click", (e) => {
       e.preventDefault();
 
       this.username = document.querySelector("#username");
       this.password = document.querySelector("#password");
       this.gender = document.querySelector("#gender");
       this.bio = document.querySelector("#bio");
-
-      console.log(this.username.value);
+      /* checks with database incase everything matches or not */
       const dbRef = ref(getDatabase());
       get(child(dbRef, `users/userInfo/${this.username.value}`)).then(
-        (snapshot) =>
-        {
-          if (snapshot.exists())
-          {
-            if (this.username.value == "" || this.password.value == "")
-            {
+        (snapshot) => {
+          if (snapshot.exists()) {
+            if (this.username.value == "" || this.password.value == "") {
               display.fillInEveryBlock();
-            } else if (this.password.value != snapshot.val().password)
-            {
+            } else if (this.password.value != snapshot.val().password) {
               display.wrongUserOrPassword();
-            } else if (this.password.value == snapshot.val().password)
-            {
+            } else if (this.password.value == snapshot.val().password) {
               window.location.href = "html/home.html";
             }
             sessionStorage.setItem("user", `${snapshot.val().username}`);
             sessionStorage.setItem("gender", `${snapshot.val().gender}`);
             sessionStorage.setItem("bio", `${snapshot.val().bio}`);
-          } else
-          {
+            sessionStorage.setItem("pic", `${snapshot.val().profilePic}`);
+          } else {
             display.wrongUserOrPassword();
           }
         }
