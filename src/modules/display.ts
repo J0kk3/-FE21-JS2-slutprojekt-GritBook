@@ -1,8 +1,6 @@
-export class DisplayToDom
-{
+export class DisplayToDom {
   /* Different error messages that displays */
-  public hideRegisterElements(): void
-  {
+  public hideRegisterElements(): void {
     const dropdown: HTMLElement = document.querySelector("#gender-choice");
     dropdown.style.display = "none";
     const textarea: HTMLElement = document.querySelector("#user-bio");
@@ -10,24 +8,20 @@ export class DisplayToDom
     const registerBtn: HTMLElement = document.querySelector("#register-user");
     registerBtn.style.display = "none";
   }
-  public fillInEveryBlock(): void
-  {
+  public fillInEveryBlock(): void {
     const inputError: HTMLElement = document.getElementById("gritverse-title");
     inputError.innerText = "Please fill in every input...";
   }
 
-  public wrongUserOrPassword(): void
-  {
+  public wrongUserOrPassword(): void {
     const wrongPw: HTMLElement = document.getElementById("gritverse-title");
     wrongPw.innerText = "Wrong username or password, try again...";
   }
-  public doesntExist(): void
-  {
+  public doesntExist(): void {
     const noUser: HTMLElement = document.getElementById("gritverse-title");
     noUser.innerText = "User doesn't exist.";
   }
-  public alreadyUser(): void
-  {
+  public alreadyUser(): void {
     const alreadyAnUser: HTMLElement =
       document.getElementById("gritverse-title");
     alreadyAnUser.innerText =
@@ -35,13 +29,10 @@ export class DisplayToDom
   }
   /* ----------------------------------------------------------------- */
   /* Shows and hides elements in login-page */
-  public hideAndShowLoginPage(): void
-  {
+  public hideAndShowLoginPage(): void {
     /* Shows signup-page */
-    document.getElementById("register").addEventListener("click", (e) =>
-    {
+    document.getElementById("register").addEventListener("click", (e) => {
       e.preventDefault();
-      console.log("in hide login page");
       const div: HTMLElement = document.getElementById("form-title-container");
       const loginTitle: HTMLElement = document.getElementById("login-title");
       const username = document.getElementById("username") as HTMLInputElement;
@@ -55,13 +46,16 @@ export class DisplayToDom
       const textarea: HTMLElement = document.querySelector("#user-bio");
       const bioText: HTMLElement = document.querySelector("#bio-title");
       const registerBtn: HTMLElement = document.querySelector("#register-user");
+      const profilePicture: HTMLElement = document.querySelector("#userIMG");
 
+      profilePicture.style.display = "block";
       registerBtn.style.display = "center";
       loginTitle.style.display = "center";
       username.style.display = "center";
       password.style.display = "center";
       username.value = "";
       password.value = "";
+      div.style.height = "834px";
       logo.style.display = "none";
       login.style.display = "none";
       dropdown.style.display = "block";
@@ -77,8 +71,7 @@ export class DisplayToDom
         'Already have an account? <a id="return" href="">Click here</a>';
 
       /* shows login-page */
-      document.getElementById("return").addEventListener("click", (e) =>
-      {
+      document.getElementById("return").addEventListener("click", (e) => {
         e.preventDefault();
         e.stopPropagation();
 
@@ -94,10 +87,10 @@ export class DisplayToDom
         registerBtn.style.display = "none";
         login.style.display = "revert";
         alreadyAccount.style.display = "center";
+        profilePicture.style.display = "none";
+        div.style.height = "500px";
         alreadyAccount.innerHTML =
           'No account? <a id="return" href="">Register here</a>';
-
-        console.log("in return");
       });
     });
   }
