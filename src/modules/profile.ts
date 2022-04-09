@@ -30,5 +30,6 @@ import { deleteProfile } from "./deleteUser";
     }
   });
 })();
+
 deleteProfile();
 logOut();

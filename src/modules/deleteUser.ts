@@ -2,7 +2,8 @@ import { ref, remove } from "firebase/database";
 import { db } from "./firebaseApp";
 
 /* Function for deleting your own profile */
-export function deleteProfile(): void {
+export function deleteProfile(): void
+{
   const deleteProfileBtn = document.getElementById(
     "delete-account"
   ) as HTMLButtonElement;
@@ -13,20 +14,24 @@ export function deleteProfile(): void {
   let target = sessionStorage.getItem("targetUser");
   let currentUser = target === null ? usernameID : target;
   /* checks if current user is logged in or not */
-  if (sessionStorage.getItem("user") == currentUser) {
+  if (sessionStorage.getItem("user") == currentUser)
+  {
     deleteProfileBtn.style.display = "block";
 
-    deleteProfileBtn.addEventListener("click", (e) => {
+    deleteProfileBtn.addEventListener("click", (e) =>
+    {
       let deleteAccountBtn = confirm("Are you sure?");
-      if (deleteAccountBtn) {
+      if (deleteAccountBtn)
+      {
         const deleteUser = ref(
           db,
           "/users/userInfo/" + sessionStorage.getItem("user")
         );
         sessionStorage.clear();
         remove(deleteUser);
-        window.location.href = "/index.html";
-      } else {
+        window.location.href = "./index.html";
+      } else
+      {
         deleteProfileBtn.style.display = "none";
       }
     });
